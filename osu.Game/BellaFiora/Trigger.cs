@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using osu.Framework.Configuration;
+using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
@@ -30,6 +31,7 @@ namespace osu.Game.BellaFiora
         private static BeatmapDifficultyCache beatmapDifficultyCache = null!;
         private static BeatmapManager beatmapManager = null!;
         private static ScreenshotManager screenshotManager = null!;
+        private static GameHost host = null!;
 
         public static void CarouselBeatmapsTrulyLoaded(SongSelect songSelect)
         {
@@ -50,6 +52,7 @@ namespace osu.Game.BellaFiora
                     BeatmapDifficultyCache = beatmapDifficultyCache,
                     BeatmapManager = beatmapManager,
                     ScreenshotManager = screenshotManager,
+                    Host = host,
                 };
                 server.Start();
             }
@@ -112,25 +115,24 @@ namespace osu.Game.BellaFiora
             }
         }
 
-        public static void LocalConfigLoaded(OsuConfigManager lc, FrameworkConfigManager fcm)
-        {
-            osuConfigManager = lc;
-            frameworkConfigManager = fcm;
-        }
-
-        public static void BeatmapDifficultyCacheCreated(BeatmapDifficultyCache bdc)
-        {
-            beatmapDifficultyCache = bdc;
-        }
-
-        public static void BeatmapManagerCreated(BeatmapManager bm)
-        {
-            beatmapManager = bm;
-        }
-
         public static void ScreenShotManagerCreated(ScreenshotManager sm)
         {
             screenshotManager = sm;
+        }
+
+        public static void OsuGameBaseCreated(
+            BeatmapDifficultyCache bdc,
+            BeatmapManager bm,
+            OsuConfigManager lc,
+            FrameworkConfigManager fcm,
+            GameHost ht
+        )
+        {
+            beatmapDifficultyCache = bdc;
+            beatmapManager = bm;
+            osuConfigManager = lc;
+            frameworkConfigManager = fcm;
+            host = ht;
         }
     }
 }

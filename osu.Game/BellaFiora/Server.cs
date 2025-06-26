@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using osu.Framework.Configuration;
+using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.BellaFiora.Endpoints;
 using osu.Game.BellaFiora.Utils;
@@ -38,6 +39,7 @@ namespace osu.Game.BellaFiora
         public FrameworkConfigManager FrameworkConfigManager = null!;
         public BeatmapManager BeatmapManager = null!;
         public ScreenshotManager ScreenshotManager = null!;
+        public GameHost Host = null!;
 
         public Server(SynchronizationContext syncContext)
             : base()

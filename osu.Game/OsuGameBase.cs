@@ -349,8 +349,6 @@ namespace osu.Game
 
             dependencies.Cache(difficultyCache = new BeatmapDifficultyCache());
 
-            Triggers.BeatmapDifficultyCacheCreated(difficultyCache);
-
             // ordering is important here to ensure foreign keys rules are not broken in ModelStore.Cleanup()
             dependencies.Cache(
                 ScoreManager = new ScoreManager(
@@ -377,8 +375,6 @@ namespace osu.Game
                 )
             );
             dependencies.CacheAs<IWorkingBeatmapCache>(BeatmapManager);
-
-            Triggers.BeatmapManagerCreated(BeatmapManager);
 
             dependencies.Cache(BeatmapDownloader = new BeatmapModelDownloader(BeatmapManager, API));
             dependencies.Cache(ScoreDownloader = new ScoreModelDownloader(ScoreManager, API));
@@ -508,7 +504,13 @@ namespace osu.Game
                 SkinManager.Query(s => s.ID == id)?.ToString() ?? "Unknown";
             LocalConfig.LookupKeyBindings = l => KeyBindingStore.GetBindingsStringFor(l);
 
-            Triggers.LocalConfigLoaded(LocalConfig, frameworkConfig);
+            Triggers.OsuGameBaseCreated(
+                difficultyCache,
+                BeatmapManager,
+                LocalConfig,
+                frameworkConfig,
+                Host
+            );
         }
 
         private void updateLanguage() =>
