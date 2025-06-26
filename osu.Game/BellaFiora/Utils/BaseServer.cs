@@ -21,7 +21,7 @@ namespace osu.Game.BellaFiora.Utils
         public BaseServer()
         {
             listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:8080/");
+            listener.Prefixes.Add("http://+:8080/");
             getHandlers.Add("GET", GETHandlers);
             getHandlers.Add("POST", POSTHandlers);
             getHandlers.Add("PUT", PUTHandlers);
