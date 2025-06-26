@@ -64,6 +64,7 @@ using osu.Game.Scoring;
 using osu.Game.Skinning;
 using osu.Game.Utils;
 using RuntimeInfo = osu.Framework.RuntimeInfo;
+using osu.Game.BellaFiora;
 
 namespace osu.Game
 {
@@ -319,11 +320,15 @@ namespace osu.Game
 
             dependencies.Cache(difficultyCache = new BeatmapDifficultyCache());
 
+            Triggers.BeatmapDifficultyCacheCreated(difficultyCache);
+
             // ordering is important here to ensure foreign keys rules are not broken in ModelStore.Cleanup()
             dependencies.Cache(ScoreManager = new ScoreManager(RulesetStore, () => BeatmapManager, Storage, realm, API, LocalConfig));
 
             dependencies.Cache(BeatmapManager = new BeatmapManager(Storage, realm, API, Audio, Resources, Host, defaultBeatmap, difficultyCache, performOnlineLookups: true));
             dependencies.CacheAs<IWorkingBeatmapCache>(BeatmapManager);
+
+            Triggers.BeatmapManagerCreated(BeatmapManager);
 
             dependencies.Cache(BeatmapDownloader = new BeatmapModelDownloader(BeatmapManager, API));
             dependencies.Cache(ScoreDownloader = new ScoreModelDownloader(ScoreManager, API));
@@ -435,6 +440,8 @@ namespace osu.Game
             // if this becomes a more common thing, tracked settings should be reconsidered to allow local DI.
             LocalConfig.LookupSkinName = id => SkinManager.Query(s => s.ID == id)?.ToString() ?? "Unknown";
             LocalConfig.LookupKeyBindings = l => KeyBindingStore.GetBindingsStringFor(l);
+
+            Triggers.LocalConfigLoaded(LocalConfig, frameworkConfig);
         }
 
         private void updateLanguage() => CurrentLanguage.Value = LanguageExtensions.GetLanguageFor(frameworkLocale.Value, localisationParameters.Value);

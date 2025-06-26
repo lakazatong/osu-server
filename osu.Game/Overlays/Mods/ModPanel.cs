@@ -12,6 +12,7 @@ using osu.Game.Graphics;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
 using osuTK;
+using osu.Game.BellaFiora;
 
 namespace osu.Game.Overlays.Mods
 {
@@ -74,6 +75,8 @@ namespace osu.Game.Overlays.Mods
                 else
                     Content.EdgeEffect = default;
             }, true);
+
+            Triggers.ModPanelLoadComplete(this);
         }
 
         protected override void Select()

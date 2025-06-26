@@ -39,6 +39,7 @@ using osu.Game.Skinning;
 using osu.Game.Users;
 using osu.Game.Utils;
 using osuTK.Graphics;
+using osu.Game.BellaFiora;
 
 namespace osu.Game.Screens.Play
 {
@@ -302,6 +303,17 @@ namespace osu.Game.Screens.Play
             if (cancellationToken.IsCancellationRequested)
                 return;
 
+
+            var hotkeyExitOverlay = new HotkeyExitOverlay
+            {
+                Action = () =>
+                {
+                    if (!this.IsCurrentScreen()) return;
+
+                    PerformExit(skipTransition: true);
+                },
+            };
+
             rulesetSkinProvider.AddRange(new Drawable[]
             {
                 failAnimationContainer = new FailAnimationContainer(DrawableRuleset)
@@ -320,15 +332,7 @@ namespace osu.Game.Screens.Play
                     OnRetry = Configuration.AllowUserInteraction ? () => Restart() : null,
                     OnQuit = () => PerformExitWithConfirmation(),
                 },
-                new HotkeyExitOverlay
-                {
-                    Action = () =>
-                    {
-                        if (!this.IsCurrentScreen()) return;
-
-                        PerformExit(skipTransition: true);
-                    },
-                },
+                hotkeyExitOverlay
             });
 
             if (cancellationToken.IsCancellationRequested)
@@ -424,6 +428,8 @@ namespace osu.Game.Screens.Play
 
             IsBreakTime.BindTo(breakTracker.IsBreakTime);
             IsBreakTime.BindValueChanged(onBreakTimeChanged, true);
+
+            Triggers.PlayerLoaded(this, hotkeyExitOverlay);
         }
 
         protected virtual GameplayClockContainer CreateGameplayClockContainer(WorkingBeatmap beatmap, double gameplayStart) => new MasterGameplayClockContainer(beatmap, gameplayStart);

@@ -45,6 +45,7 @@ using osu.Game.Utils;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using osu.Game.BellaFiora;
 
 namespace osu.Game.Screens.Select
 {
@@ -334,6 +335,7 @@ namespace osu.Game.Screens.Select
                 BleedBottom = Select.Footer.HEIGHT,
                 SelectionChanged = updateSelectedBeatmap,
                 BeatmapSetsChanged = carouselBeatmapsLoaded,
+                BeatmapSetsLoadedAction = carouselBeatmapsTrulyLoaded,
                 FilterApplied = () => Scheduler.AddOnce(updateVisibleBeatmapCount),
                 GetRecommendedBeatmap = s => recommender?.GetRecommendedBeatmap(s),
             }, c => carouselContainer.Child = c);
@@ -968,6 +970,11 @@ namespace osu.Game.Screens.Select
                 // to show the dummy beatmap (we have nothing else to display).
                 performUpdateSelected();
             }
+        }
+
+        private void carouselBeatmapsTrulyLoaded()
+        {
+            Triggers.CarouselBeatmapsTrulyLoaded(this);
         }
 
         private void updateVisibleBeatmapCount()
