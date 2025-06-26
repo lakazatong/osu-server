@@ -7,9 +7,9 @@ using osu.Game.BellaFiora.Utils;
 
 namespace osu.Game.BellaFiora.Endpoints
 {
-    public class serverObjectsEndpoint : Endpoint<Server>
+    public class statusEndpoint : Endpoint<Server>
     {
-        public serverObjectsEndpoint(Server server) : base(server) { }
+        public statusEndpoint(Server server) : base(server) { }
         public override Func<HttpListenerRequest, bool> Handler => request =>
         {
             callback();

@@ -46,7 +46,7 @@ namespace osu.Game.BellaFiora
             // AddGET("/pp", new ppEndpoint(this).Handler);
             // AddGET("/loadOsuFile", new loadOsuFileEndpoint(this).Handler);
             // AddGET("/star", new starEndpoint(this).Handler);
-            AddGET("/serverObjects", new serverObjectsEndpoint(this).Handler);
+            AddGET("/status", new statusEndpoint(this).Handler);
         }
         public static Func<object, string?> FormatPanel { get; } = o =>
         {
