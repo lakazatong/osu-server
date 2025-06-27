@@ -216,6 +216,11 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                             return;
                         }
 
+                        Console.WriteLine("---------------------------------------------");
+                        foreach (var res in resolutions)
+                            Console.WriteLine(res);
+                        Console.WriteLine("---------------------------------------------");
+
                         resolutions.ReplaceRange(
                             1,
                             resolutions.Count - 1,
@@ -227,6 +232,11 @@ namespace osu.Game.Overlays.Settings.Sections.Graphics
                                 .Select(m => m.Size)
                                 .Distinct()
                         );
+
+                        Console.WriteLine("---------------------------------------------");
+                        foreach (var res in resolutions)
+                            Console.WriteLine(res);
+                        Console.WriteLine("---------------------------------------------");
 
                         updateDisplaySettingsVisibility();
                     }),
