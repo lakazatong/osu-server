@@ -35,11 +35,13 @@ namespace osu.Game.BellaFiora
 
         public static void FooterButtonModsLoadComplete(FooterButtonMods button)
         {
+            Console.WriteLine("FooterButtonModsLoadComplete triggered");
             if (!footerButtonModsLoadCompleteTrigged)
             {
                 // this will trigger the creation of all mod panels
                 button.TriggerClick();
                 footerButtonModsLoadCompleteTrigged = true;
+                Console.WriteLine("FooterButtonMods clicked");
             }
         }
     }
