@@ -1,8 +1,6 @@
 #pragma warning disable IDE0073
 
-using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;

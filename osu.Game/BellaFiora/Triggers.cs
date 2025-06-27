@@ -10,7 +10,7 @@ namespace osu.Game.BellaFiora
     public class Triggers
     {
         private static Server server = null!;
-        private static bool footerButtonModsLoadCompleteTrigged = false;
+        private static bool footerButtonModsLoadedClicked = false;
         private static readonly List<Action<Server>> pending_actions = new List<Action<Server>>();
 
         public static void AssignToServer(Action<Server> action)
@@ -33,15 +33,15 @@ namespace osu.Game.BellaFiora
             }
         }
 
-        public static void FooterButtonModsLoadComplete(FooterButtonMods button)
+        public static void FooterButtonModsLoaded(FooterButtonMods btn)
         {
-            Console.WriteLine("FooterButtonModsLoadComplete triggered");
-            if (!footerButtonModsLoadCompleteTrigged)
+            Console.WriteLine("FooterButtonModsLoaded called");
+            if (!footerButtonModsLoadedClicked)
             {
                 // this will trigger the creation of all mod panels
-                button.TriggerClick();
-                footerButtonModsLoadCompleteTrigged = true;
-                Console.WriteLine("FooterButtonMods clicked");
+                Console.WriteLine("FooterButtonModsLoaded called, showing the overlay.");
+                btn.TriggerClick();
+                footerButtonModsLoadedClicked = true;
             }
         }
     }

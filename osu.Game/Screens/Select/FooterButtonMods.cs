@@ -124,7 +124,7 @@ namespace osu.Game.Screens.Select
                 true
             );
 
-            Triggers.FooterButtonModsLoadComplete(this);
+            Triggers.FooterButtonModsLoaded(this);
         }
 
         private void updateMultiplierText() =>
