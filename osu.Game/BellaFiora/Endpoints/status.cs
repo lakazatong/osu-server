@@ -34,8 +34,6 @@ namespace osu.Game.BellaFiora.Endpoints
                     {
                         object? value = property.GetValue(Server);
                         status[property.Name] = value != null;
-
-                        Console.WriteLine($"{property.Name}: {value}");
                     }
 
                     Server.RespondJSON(status);
