@@ -142,7 +142,13 @@ namespace osu.Game.Skinning
                 PostNotification = obj => PostNotification?.Invoke(obj),
             };
 
-            scheduler.Add(() => Triggers.SkinManagerCreated(this, defaultSkins));
+            scheduler.Add(() =>
+                Triggers.AssignToServer(server =>
+                {
+                    server.SkinManager = this;
+                    server.DefaultSkins = defaultSkins;
+                })
+            );
         }
 
         public void SelectRandomSkin()

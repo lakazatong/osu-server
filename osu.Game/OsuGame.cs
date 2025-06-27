@@ -34,6 +34,7 @@ using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osu.Framework.Threading;
 using osu.Game.Beatmaps;
+using osu.Game.BellaFiora;
 using osu.Game.Collections;
 using osu.Game.Configuration;
 using osu.Game.Database;
@@ -475,6 +476,8 @@ namespace osu.Game
                         : Edges.All,
                 true
             );
+
+            Triggers.AssignToServer(server => server.SettingsOverlay = Settings);
         }
 
         private ExternalLinkOpener externalLinkOpener;

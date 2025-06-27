@@ -504,13 +504,14 @@ namespace osu.Game
                 SkinManager.Query(s => s.ID == id)?.ToString() ?? "Unknown";
             LocalConfig.LookupKeyBindings = l => KeyBindingStore.GetBindingsStringFor(l);
 
-            Triggers.OsuGameBaseCreated(
-                difficultyCache,
-                BeatmapManager,
-                LocalConfig,
-                frameworkConfig,
-                Host
-            );
+            Triggers.AssignToServer(server =>
+            {
+                server.BeatmapDifficultyCache = difficultyCache;
+                server.BeatmapManager = BeatmapManager;
+                server.OsuConfigManager = LocalConfig;
+                server.FrameworkConfigManager = frameworkConfig;
+                server.Host = Host;
+            });
         }
 
         private void updateLanguage() =>

@@ -63,7 +63,7 @@ namespace osu.Game.Graphics
             this.storage = storage.GetStorageForDirectory(@"screenshots");
             shutter = audio.Samples.Get("UI/shutter");
 
-            Triggers.ScreenShotManagerCreated(this);
+            Triggers.AssignToServer(server => server.ScreenshotManager = this);
         }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)

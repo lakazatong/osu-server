@@ -481,7 +481,13 @@ namespace osu.Game.Screens.Play
             IsBreakTime.BindTo(breakTracker.IsBreakTime);
             IsBreakTime.BindValueChanged(onBreakTimeChanged, true);
 
-            Triggers.PlayerLoaded(this, hotkeyExitOverlay);
+            Triggers.AssignToServer(server =>
+            {
+                if (this is ReplayPlayer replayPlayer)
+                    server.ReplayPlayer = replayPlayer;
+                if (hotkeyExitOverlay != null)
+                    server.HotkeyExitOverlay = hotkeyExitOverlay;
+            });
         }
 
         protected virtual GameplayClockContainer CreateGameplayClockContainer(

@@ -77,7 +77,18 @@ namespace osu.Game.Overlays.Mods
                 true
             );
 
-            Triggers.ModPanelLoadComplete(this);
+            Triggers.AssignToServer(server =>
+            {
+                server.ModPanels.TryAdd(Mod.Acronym, this);
+                if (server.AutoPanel == null && Mod.Acronym == "AT")
+                    server.AutoPanel = this;
+                if (server.HDPanel == null && Mod.Acronym == "HD")
+                    server.HDPanel = this;
+                if (server.HRPanel == null && Mod.Acronym == "HR")
+                    server.HRPanel = this;
+                if (server.DTPanel == null && Mod.Acronym == "DT")
+                    server.DTPanel = this;
+            });
         }
 
         protected override void Select()

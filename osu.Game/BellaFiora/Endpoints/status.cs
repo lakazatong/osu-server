@@ -24,27 +24,21 @@ namespace osu.Game.BellaFiora.Endpoints
             Server.UpdateThread.Post(
                 _ =>
                 {
-                    Server.RespondJSON(
-                        new Dictionary<string, bool>
-                        {
-                            { "SongSelect", Server.SongSelect != null },
-                            { "SkinManager", Server.SkinManager != null },
-                            { "DefaultSkins", Server.DefaultSkins != null },
-                            { "CustomSkins", Server.CustomSkins != null },
-                            { "ModPanels", Server.ModPanels != null },
-                            { "NMmod", Server.NMmod != null },
-                            { "AutoPanel", Server.AutoPanel != null },
-                            { "HDPanel", Server.HDPanel != null },
-                            { "HRPanel", Server.HRPanel != null },
-                            { "DTPanel", Server.DTPanel != null },
-                            { "Player", Server.ReplayPlayer != null },
-                            { "HotkeyExitOverlay", Server.HotkeyExitOverlay != null },
-                            { "OsuConfigManager", Server.OsuConfigManager != null },
-                            { "BeatmapDifficultyCache", Server.BeatmapDifficultyCache != null },
-                            { "FrameworkConfigManager", Server.FrameworkConfigManager != null },
-                            { "BeatmapManager", Server.BeatmapManager != null },
-                        }
-                    );
+                    var status = new Dictionary<string, bool>();
+                    foreach (
+                        var property in typeof(Server).GetProperties(
+                            System.Reflection.BindingFlags.Public
+                                | System.Reflection.BindingFlags.Instance
+                        )
+                    )
+                    {
+                        object? value = property.GetValue(Server);
+                        status[property.Name] = value != null;
+
+                        Console.WriteLine($"{property.Name}: {value}");
+                    }
+
+                    Server.RespondJSON(status);
                 },
                 null
             );
