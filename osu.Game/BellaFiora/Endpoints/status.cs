@@ -15,31 +15,26 @@ namespace osu.Game.BellaFiora.Endpoints
         public override Func<HttpListenerRequest, bool> Handler =>
             request =>
             {
-                callback();
+                Server.UpdateThread.Post(
+                    _ =>
+                    {
+                        var status = new Dictionary<string, bool>();
+                        foreach (
+                            var property in typeof(Server).GetProperties(
+                                System.Reflection.BindingFlags.Public
+                                    | System.Reflection.BindingFlags.Instance
+                            )
+                        )
+                        {
+                            object? value = property.GetValue(Server);
+                            status[property.Name] = value != null;
+                        }
+
+                        Server.RespondJSON(status);
+                    },
+                    null
+                );
                 return true;
             };
-
-        private void callback()
-        {
-            Server.UpdateThread.Post(
-                _ =>
-                {
-                    var status = new Dictionary<string, bool>();
-                    foreach (
-                        var property in typeof(Server).GetProperties(
-                            System.Reflection.BindingFlags.Public
-                                | System.Reflection.BindingFlags.Instance
-                        )
-                    )
-                    {
-                        object? value = property.GetValue(Server);
-                        status[property.Name] = value != null;
-                    }
-
-                    Server.RespondJSON(status);
-                },
-                null
-            );
-        }
     }
 }

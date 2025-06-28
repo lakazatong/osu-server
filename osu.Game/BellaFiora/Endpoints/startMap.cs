@@ -24,21 +24,16 @@ namespace osu.Game.BellaFiora.Endpoints
                 var QueryString = request.QueryString;
                 string? beatmapIdStr = QueryString["beatmapId"];
                 string? modsStr = QueryString["mods"];
-                string? skinStr = QueryString["skin"];
 
-                if (
-                    int.TryParse(beatmapIdStr, out int beatmapId)
-                    && modsStr != null
-                    && int.TryParse(skinStr, out int skin)
-                )
+                if (int.TryParse(beatmapIdStr, out int beatmapId) && modsStr != null)
                 {
-                    callback(beatmapId, modsStr, skin);
+                    callback(beatmapId, modsStr);
                     return true;
                 }
                 return false;
             };
 
-        private void callback(int beatmapId, string modsStr, int skin)
+        private void callback(int beatmapId, string modsStr)
         {
             Server.UpdateThread.Post(
                 _ =>
@@ -53,8 +48,6 @@ namespace osu.Game.BellaFiora.Endpoints
                             "Received recordMap request",
                             "p",
                             $"Beatmap ID: {beatmapId}",
-                            "p",
-                            $"Skin: {skin}",
                             "p",
                             "Requested Mods:",
                             "ul",
@@ -90,33 +83,6 @@ namespace osu.Game.BellaFiora.Endpoints
                     selectedModPanels.ForEach(p => p.ForceSelect());
                     Server.AutoPanel.ForceSelect();
 
-                    if (skin < 10)
-                    {
-                        // reserved to default skins
-                        // 0: DefaultLegacySkin
-                        // 1: TrianglesSkin
-                        // 2: ArgonSkin
-                        // 3: ArgonProSkin
-                        // 4-9: fallback to 0
-                        if (skin is < 0 or > 3)
-                            skin = 0;
-                        Server.SkinManager.CurrentSkinInfo.Value = Server
-                            .DefaultSkins[skin]
-                            .SkinInfo;
-                    }
-                    else
-                    {
-                        // custom skin ID
-                        if (skin - 10 < Server.CustomSkins.Count)
-                            Server.SkinManager.CurrentSkinInfo.Value = Server
-                                .CustomSkins[skin - 10]
-                                .SkinInfo;
-                        else
-                            Server.SkinManager.CurrentSkinInfo.Value = Server
-                                .DefaultSkins[0]
-                                .SkinInfo;
-                    }
-
                     bool started = Server.SongSelect.StartMap(beatmapId);
 
                     Server.RespondHTML(
@@ -126,8 +92,6 @@ namespace osu.Game.BellaFiora.Endpoints
                         $"Started: {started}",
                         "p",
                         $"Beatmap ID: {beatmapId}",
-                        "p",
-                        $"Skin: {skin}",
                         "p",
                         "Requested Mods:",
                         "ul",

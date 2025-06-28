@@ -2,7 +2,6 @@
 
 using System;
 using System.Net;
-using osu.Framework.Extensions;
 using osu.Game.BellaFiora.Utils;
 
 namespace osu.Game.BellaFiora.Endpoints

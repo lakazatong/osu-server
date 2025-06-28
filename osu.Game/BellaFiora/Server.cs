@@ -49,14 +49,15 @@ namespace osu.Game.BellaFiora
 
             // AddGET("/loadConfig", new loadConfigEndpoint(this).Handler);
             // AddGET("/saveConfig", new saveConfigEndpoint(this).Handler);
-            // AddGET("/startMap", new startMapEndpoint(this).Handler);
             // AddGET("/stopMap", new stopMapEndpoint(this).Handler);
             // AddGET("/pp", new ppEndpoint(this).Handler);
             // AddGET("/loadOsuFile", new loadOsuFileEndpoint(this).Handler);
             // AddGET("/star", new starEndpoint(this).Handler);
             AddGET("/status", new statusEndpoint(this).Handler);
             AddGET("/screenshot", new screenshotEndpoint(this).Handler);
-            AddPOST("/toggleSettings", new toggleSettingsEndpoint(this).Handler);
+            AddGET("/toggleSettings", new toggleSettingsEndpoint(this).Handler);
+            AddGET("/startMap", new startMapEndpoint(this).Handler);
+            AddGET("/stopMap", new stopMapEndpoint(this).Handler);
         }
     }
 }

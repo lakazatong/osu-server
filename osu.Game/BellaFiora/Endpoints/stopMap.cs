@@ -2,14 +2,13 @@
 
 using System;
 using System.Net;
-using osu.Framework.Graphics.Containers;
 using osu.Game.BellaFiora.Utils;
 
 namespace osu.Game.BellaFiora.Endpoints
 {
-    public class toggleSettingsEndpoint : Endpoint<Server>
+    public class stopMapEndpoint : Endpoint<Server>
     {
-        public toggleSettingsEndpoint(Server server)
+        public stopMapEndpoint(Server server)
             : base(server) { }
 
         public override Func<HttpListenerRequest, bool> Handler =>
@@ -18,13 +17,8 @@ namespace osu.Game.BellaFiora.Endpoints
                 Server.UpdateThread.Post(
                     _ =>
                     {
-                        Server.SettingsOverlay?.ToggleVisibility();
-                        Server.RespondJSON(
-                            new
-                            {
-                                state = Server.SettingsOverlay?.State.Value == Visibility.Visible,
-                            }
-                        );
+                        Server.HotkeyExitOverlay?.Action.Invoke();
+                        Server.RespondHTML("h1", "Received stopMap request", "p", "Map stopped");
                     },
                     null
                 );

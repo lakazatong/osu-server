@@ -193,7 +193,5 @@ namespace osu.Game.BellaFiora.Utils
 
             receive();
         }
-
-        public static Func<object, string?> UnitFormatter { get; } = o => o?.ToString();
     }
 }
