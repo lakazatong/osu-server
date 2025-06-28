@@ -123,8 +123,6 @@ namespace osu.Game.Screens.Select
                 },
                 true
             );
-
-            Triggers.FooterButtonModsLoaded(this);
         }
 
         private void updateMultiplierText() =>

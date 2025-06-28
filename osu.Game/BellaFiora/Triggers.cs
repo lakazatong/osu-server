@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using osu.Game.Overlays.Mods;
 using osu.Game.Screens.Select;
 
 namespace osu.Game.BellaFiora
@@ -33,14 +34,15 @@ namespace osu.Game.BellaFiora
             }
         }
 
-        public static void FooterButtonModsLoaded(FooterButtonMods btn)
+        public static void FooterButtonModsLoaded(UserModSelectOverlay overlay)
         {
             Console.WriteLine("FooterButtonModsLoaded called");
             if (!footerButtonModsLoadedClicked)
             {
                 // this will trigger the creation of all mod panels
                 Console.WriteLine("FooterButtonModsLoaded called, showing the overlay.");
-                btn.TriggerClick();
+                // btn.TriggerClick();
+                overlay.Show();
                 footerButtonModsLoadedClicked = true;
             }
         }
