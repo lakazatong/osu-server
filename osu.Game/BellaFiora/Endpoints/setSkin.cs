@@ -8,6 +8,13 @@ namespace osu.Game.BellaFiora.Endpoints
 {
     public class setSkinEndpoint : Endpoint<Server>
     {
+        public override string Method { get; set; } = "GET";
+        public override string Description { get; set; } =
+            "Sets the current skin.\n"
+            + "You can use `skin` in the query string to set the skin.\n"
+            + "0-3 are reserved for default skins, 4-9 fallback to 0,\n"
+            + "10+ are custom skins. An index of 10 correponds to the first custom skin.";
+
         public setSkinEndpoint(Server server)
             : base(server) { }
 

@@ -8,6 +8,9 @@ namespace osu.Game.BellaFiora.Endpoints
 {
     public class streamEndpoint : Endpoint<Server>
     {
+        public override string Method { get; set; } = "GET";
+        public override string Description { get; set; } = string.Empty;
+
         public streamEndpoint(Server server)
             : base(server) { }
 

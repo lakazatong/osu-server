@@ -9,6 +9,10 @@ namespace osu.Game.BellaFiora.Endpoints
 {
     public class screenshotEndpoint : Endpoint<Server>
     {
+        public override string Method { get; set; } = "GET";
+        public override string Description { get; set; } =
+            "Returns a screenshot of the game.\nNo parameters.";
+
         public screenshotEndpoint(Server server)
             : base(server) { }
 

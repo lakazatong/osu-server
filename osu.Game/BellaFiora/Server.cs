@@ -1,6 +1,9 @@
 #pragma warning disable IDE0073
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
@@ -39,27 +42,38 @@ namespace osu.Game.BellaFiora
         public FrameworkConfigManager FrameworkConfigManager { get; internal set; } = null!;
         public BeatmapManager BeatmapManager { get; internal set; } = null!;
         public ScreenshotManager ScreenshotManager { get; internal set; } = null!;
-        public GameHost Host { get; internal set; } = null!;
+        public GameHost GameHost { get; internal set; } = null!;
         public SettingsOverlay SettingsOverlay { get; internal set; } = null!;
 
+        public static readonly string HOST =
+            Environment.GetEnvironmentVariable("DOCKER_ENV") == "true" ? "+" : "localhost";
+        public static readonly string PORT =
+            Environment.GetEnvironmentVariable("OSU_SERVER_PORT") ?? "8080";
+
         public Server(SynchronizationContext syncContext)
-            : base()
+            : base($"http://{HOST}:{PORT}/")
         {
             UpdateThread = syncContext;
 
-            // AddGET("/loadConfig", new loadConfigEndpoint(this).Handler);
-            // AddGET("/saveConfig", new saveConfigEndpoint(this).Handler);
-            // AddGET("/stopMap", new stopMapEndpoint(this).Handler);
-            // AddGET("/pp", new ppEndpoint(this).Handler);
-            // AddGET("/loadOsuFile", new loadOsuFileEndpoint(this).Handler);
-            // AddGET("/star", new starEndpoint(this).Handler);
-            AddGET("/status", new statusEndpoint(this).Handler);
-            AddGET("/screenshot", new screenshotEndpoint(this).Handler);
-            AddGET("/toggleSettings", new toggleSettingsEndpoint(this).Handler);
-            AddGET("/startMap", new startMapEndpoint(this).Handler);
-            AddGET("/stopMap", new stopMapEndpoint(this).Handler);
-            AddGET("/setSkin", new setSkinEndpoint(this).Handler);
-            AddGET("/addBeatmap", new addBeatmapEndpoint(this).Handler);
+            var endpointTypes = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(t =>
+                    t.IsClass
+                    && !t.IsAbstract
+                    && typeof(Endpoint<Server>).IsAssignableFrom(t)
+                    && t.Namespace == "osu.Game.BellaFiora.Endpoints"
+                );
+
+            foreach (var type in endpointTypes)
+            {
+                var constructor = type.GetConstructor([typeof(Server)]);
+                if (constructor == null)
+                    continue;
+
+                var instance = (Endpoint<Server>)constructor.Invoke([this]);
+                Add(instance);
+            }
         }
     }
 }

@@ -1,17 +1,18 @@
 #pragma warning disable IDE0073
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using osu.Game.BellaFiora.Utils;
 
 namespace osu.Game.BellaFiora.Endpoints
 {
-    public class stopMapEndpoint : Endpoint<Server>
+    public class endpointsEndpoint : Endpoint<Server>
     {
         public override string Method { get; set; } = "GET";
-        public override string Description { get; set; } = "Stops the current map.\nNo parameters.";
+        public override string Description { get; set; } = "Returns this.\nNo parameters.";
 
-        public stopMapEndpoint(Server server)
+        public endpointsEndpoint(Server server)
             : base(server) { }
 
         public override Func<HttpListenerRequest, bool> Handler =>
@@ -20,8 +21,11 @@ namespace osu.Game.BellaFiora.Endpoints
                 Server.UpdateThread.Post(
                     _ =>
                     {
-                        Server.HotkeyExitOverlay?.Action.Invoke();
-                        Server.RespondHTML("h1", "Received stopMap request", "p", "Map stopped");
+                        var endpoints = new Dictionary<string, string>();
+                        foreach (var endpoint in Server.Endpoints)
+                            endpoints[endpoint.Path] = endpoint.Description;
+
+                        Server.RespondJSON(endpoints);
                     },
                     null
                 );

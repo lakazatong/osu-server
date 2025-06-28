@@ -510,7 +510,7 @@ namespace osu.Game
                 server.BeatmapManager = BeatmapManager;
                 server.OsuConfigManager = LocalConfig;
                 server.FrameworkConfigManager = frameworkConfig;
-                server.Host = Host;
+                server.GameHost = Host;
             });
         }
 

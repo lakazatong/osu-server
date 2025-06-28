@@ -15,6 +15,12 @@ namespace osu.Game.BellaFiora.Endpoints
 {
     public class startMapEndpoint : Endpoint<Server>
     {
+        public override string Method { get; set; } = "GET";
+        public override string Description { get; set; } =
+            "Starts a map with the given beatmap ID and mods.\n"
+            + "You can use `beatmapId` and `mods` in the query string.\n"
+            + "Mods should be a string of capital mod acronyms separated by '+'.";
+
         public startMapEndpoint(Server server)
             : base(server) { }
 

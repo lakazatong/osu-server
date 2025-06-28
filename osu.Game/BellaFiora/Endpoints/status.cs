@@ -9,6 +9,10 @@ namespace osu.Game.BellaFiora.Endpoints
 {
     public class statusEndpoint : Endpoint<Server>
     {
+        public override string Method { get; set; } = "GET";
+        public override string Description { get; set; } =
+            "Returns wether each property of the server is non-null.\nNo parameters.";
+
         public statusEndpoint(Server server)
             : base(server) { }
 

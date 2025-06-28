@@ -11,32 +11,26 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Game.BellaFiora.Utils
 {
-    public class BaseServer
+    public abstract class BaseServer
     {
+        public readonly string Prefix;
         private HttpListener listener;
         private HttpListenerContext context = null!;
-#pragma warning disable IDE1006
-        private Dictionary<string, Func<HttpListenerRequest, bool>> GETHandlers =
-            new Dictionary<string, Func<HttpListenerRequest, bool>>();
-        private Dictionary<string, Func<HttpListenerRequest, bool>> POSTHandlers =
-            new Dictionary<string, Func<HttpListenerRequest, bool>>();
-        private Dictionary<string, Func<HttpListenerRequest, bool>> PUTHandlers =
-            new Dictionary<string, Func<HttpListenerRequest, bool>>();
-#pragma warning restore IDE1006
-        private Dictionary<
-            string,
-            Dictionary<string, Func<HttpListenerRequest, bool>>
-        > getHandlers =
-            new Dictionary<string, Dictionary<string, Func<HttpListenerRequest, bool>>>();
+        private Dictionary<string, Dictionary<string, Func<HttpListenerRequest, bool>>> handlers =
+            new Dictionary<string, Dictionary<string, Func<HttpListenerRequest, bool>>>
+            {
+                { "GET", new Dictionary<string, Func<HttpListenerRequest, bool>>() },
+                { "POST", new Dictionary<string, Func<HttpListenerRequest, bool>>() },
+                { "PUT", new Dictionary<string, Func<HttpListenerRequest, bool>>() },
+            };
 
-        public BaseServer()
+        public List<IEndpoint> Endpoints = new List<IEndpoint>();
+
+        public BaseServer(string Prefix)
         {
+            this.Prefix = Prefix;
             listener = new HttpListener();
-            listener.Prefixes.Add("http://+:8080/");
-            // listener.Prefixes.Add("http://localhost:8080/");
-            getHandlers.Add("GET", GETHandlers);
-            getHandlers.Add("POST", POSTHandlers);
-            getHandlers.Add("PUT", PUTHandlers);
+            listener.Prefixes.Add(Prefix);
         }
 
         public void Start()
@@ -58,14 +52,11 @@ namespace osu.Game.BellaFiora.Utils
             Console.WriteLine("Server stopped");
         }
 
-        protected void AddGET(string path, Func<HttpListenerRequest, bool> handler) =>
-            GETHandlers[path] = handler;
-
-        protected void AddPOST(string path, Func<HttpListenerRequest, bool> handler) =>
-            POSTHandlers[path] = handler;
-
-        protected void AddPUT(string path, Func<HttpListenerRequest, bool> handler) =>
-            PUTHandlers[path] = handler;
+        protected void Add(IEndpoint endpoint)
+        {
+            handlers[endpoint.Method]["/" + endpoint.Path] = endpoint.Handler;
+            Endpoints.Add(endpoint);
+        }
 
         public string BuildHTML(params object[] args)
         {
@@ -162,7 +153,7 @@ namespace osu.Game.BellaFiora.Utils
 
                 if (request.Url == null)
                     return false;
-                var handlers = getHandlers[request.HttpMethod];
+                var handlers = this.handlers[request.HttpMethod];
 
                 if (
                     handlers != null

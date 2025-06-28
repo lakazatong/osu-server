@@ -19,9 +19,15 @@ using osu.Game.Rulesets;
 
 namespace osu.Game.BellaFiora.Endpoints
 {
-    public class addBeatmapEndpoint : Endpoint<Server>
+    public class addMapEndpoint : Endpoint<Server>
     {
-        public addBeatmapEndpoint(Server server)
+        public override string Method { get; set; } = "GET";
+        public override string Description { get; set; } =
+            "Adds a beatmap set to the game.\n"
+            + "You can use either `beatmapId` or `beatmapSetId` in the query string.\n"
+            + "If you use `beatmapId`, it will fetch the beatmap set ID from osu.ppy.sh.";
+
+        public addMapEndpoint(Server server)
             : base(server) { }
 
         public override Func<HttpListenerRequest, bool> Handler =>
@@ -219,7 +225,7 @@ namespace osu.Game.BellaFiora.Endpoints
                 {
                     foreach (string file in filenames)
                     {
-                        archive.CreateEntryFromFile(file, Path.GetFileName(file));
+                        archive.CreateEntryFromFile(file, System.IO.Path.GetFileName(file));
                     }
                     archive.CreateEntryFromFile(dummyAudioFilename, dummyAudioFilename);
                 }
