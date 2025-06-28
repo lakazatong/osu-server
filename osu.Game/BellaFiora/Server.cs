@@ -58,6 +58,7 @@ namespace osu.Game.BellaFiora
             AddGET("/toggleSettings", new toggleSettingsEndpoint(this).Handler);
             AddGET("/startMap", new startMapEndpoint(this).Handler);
             AddGET("/stopMap", new stopMapEndpoint(this).Handler);
+            AddGET("/setSkin", new setSkinEndpoint(this).Handler);
         }
     }
 }

@@ -4,9 +4,9 @@ using osu.Game.BellaFiora.Utils;
 
 namespace osu.Game.BellaFiora.Endpoints
 {
-    public class skinEndpoint : Endpoint<Server>
+    public class setSkinEndpoint : Endpoint<Server>
     {
-        public skinEndpoint(Server server)
+        public setSkinEndpoint(Server server)
             : base(server) { }
 
         public override Func<HttpListenerRequest, bool> Handler =>
