@@ -169,9 +169,7 @@ namespace osu.Game.BellaFiora.Utils
                     && handlers.TryGetValue(request.Url.AbsolutePath, out var handler)
                     && handler != null
                 )
-                {
                     return handler(request);
-                }
             }
             catch (Exception ex)
             {
@@ -187,9 +185,7 @@ namespace osu.Game.BellaFiora.Utils
                 return;
 
             if (!tryHandleRequest(result))
-            {
                 RespondHTML("h1", "Invalid request");
-            }
 
             receive();
         }

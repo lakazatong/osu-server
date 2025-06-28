@@ -59,6 +59,7 @@ namespace osu.Game.BellaFiora
             AddGET("/startMap", new startMapEndpoint(this).Handler);
             AddGET("/stopMap", new stopMapEndpoint(this).Handler);
             AddGET("/setSkin", new setSkinEndpoint(this).Handler);
+            AddGET("/addBeatmap", new addBeatmapEndpoint(this).Handler);
         }
     }
 }
