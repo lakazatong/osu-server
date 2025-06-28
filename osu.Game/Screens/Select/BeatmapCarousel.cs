@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -314,6 +315,24 @@ namespace osu.Game.Screens.Select
             Scheduler.AddOnce(processBeatmapChanges);
         }
 
+        public Task BeatmapSetAdded(BeatmapSetInfo beatmapSetInfo)
+        {
+            beatmapSetsChanged(
+                null,
+                new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Add,
+                    beatmapSetInfo
+                )
+            );
+            return Task.Run(async () =>
+            {
+                while (Scheduler.HasPendingTasks)
+                {
+                    await Task.Delay(100).ConfigureAwait(false);
+                }
+            });
+        }
+
         // All local operations must be scheduled.
         //
         // If we don't schedule, beatmaps getting changed while song select is suspended (ie. last played being updated)
@@ -453,6 +472,34 @@ namespace osu.Game.Screens.Select
                 if (removedDrawable != null)
                     expirePanelImmediately(removedDrawable);
             }
+        }
+
+        public CarouselBeatmap? GetItem(int OnlineID) =>
+            beatmapSets
+                .SelectMany(set => set.Beatmaps)
+                .FirstOrDefault(p => p.BeatmapInfo.OnlineID == OnlineID);
+
+        public bool SelectBeatmap(int OnlineID)
+        {
+            // ensure that any pending events from BeatmapManager have been run before attempting a selection.
+            Scheduler.Update();
+
+            var item = GetItem(OnlineID);
+            if (item != null)
+            {
+                select(item);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SelectBeatmap(CarouselBeatmap item)
+        {
+            // ensure that any pending events from BeatmapManager have been run before attempting a selection.
+            Scheduler.Update();
+
+            select(item);
         }
 
         /// <summary>

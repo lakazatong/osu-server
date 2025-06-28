@@ -103,6 +103,10 @@ namespace osu.Game.Overlays.Mods
             Active.Value = false;
         }
 
+        public void ForceSelect() => Select();
+
+        public void ForceDeselect() => Deselect();
+
         #region Filtering support
 
         /// <seealso cref="ModState.Visible"/>

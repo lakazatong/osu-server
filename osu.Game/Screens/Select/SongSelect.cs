@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -39,6 +40,7 @@ using osu.Game.Screens.Backgrounds;
 using osu.Game.Screens.Edit;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Play;
+using osu.Game.Screens.Select.Carousel;
 using osu.Game.Screens.Select.Details;
 using osu.Game.Screens.Select.Options;
 using osu.Game.Skinning;
@@ -1084,6 +1086,29 @@ namespace osu.Game.Screens.Select
         {
             Triggers.CarouselBeatmapsTrulyLoaded(this);
         }
+
+        public bool StartMap(int OnlineID)
+        {
+            bool started = Carousel.SelectBeatmap(OnlineID);
+            if (started)
+                FinaliseSelection();
+            return started;
+        }
+
+        public CarouselBeatmap? GetCarouselBeatmap(int OnlineID)
+        {
+            return Carousel.GetItem(OnlineID);
+        }
+
+        public bool StartMap(CarouselBeatmap carouselBeatmap)
+        {
+            Carousel.SelectBeatmap(carouselBeatmap);
+            FinaliseSelection();
+            return true;
+        }
+
+        public Task BeatmapSetAdded(BeatmapSetInfo beatmapSetInfo) =>
+            Carousel.BeatmapSetAdded(beatmapSetInfo);
 
         private void updateVisibleBeatmapCount()
         {
